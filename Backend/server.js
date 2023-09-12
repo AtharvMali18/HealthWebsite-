@@ -1,20 +1,14 @@
 const express = require('express');
 const app = express();
-const BodyParser = require('body-parser');
-const PORT = 4135;
+const PORT = 5500;
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const usermodel = require('./Models/UserModel');
+const usermodel=require('./Models/UserModel');
 
-app.use(BodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(express.json());
 
-const uri = "mongodb+srv://adityasuryawanshi1310:LK9RXBMOokQfAUDo@adicluster.e0f4mbs.mongodb.net/"
-
-mongoose.connect(uri).then(() => {
-    console.log("MongoDb Connected");
-}).catch((err) => {
-    console.log(err)
-})
 
 app.use(cors({
     origin: "http://localhost:5173",
@@ -23,30 +17,34 @@ app.use(cors({
     credentials: true
 }))
 
-app.get("/", (req, res) => {
-    res.send("<h1>Hello!!Atlassian</h1>")
-});
+mongoose.connect("mongodb://0.0.0.0:27017", { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
+    console.log("Connected To MongoDBCompass");
+}).catch((err) => {
+    console.log(`${err} is Occured!!`);
+})
 
-app.post("/registerUser", async (req, res) => {
-    const Name = req.body.UserName;
-    const Password = req.body.UserPassword;
+app.get('/', (req, res) => {
+    res.send('Hello Welcome tot healthWebsite');
+})
+
+app.post('/handleusers', async (req, res) => {
+    const userName = req.body.Name;
+    const UserPassword = req.body.Passsword;
+    const userSurName = req.body.SurName;
     const Email = req.body.Email;
+    const UserFullName=userName+userSurName;
 
-    console.log(Name, Password, Email)
+    const User = {
+        Name: userName,
+        Surname: userSurName,
+        Passsword: UserPassword,
+        Email: Email
+    }
 
-    const user = await usermodel.create({ Name: Name,email:Email,password:Password});
-
-    console.log("New User Joined: " + user);
-
-    res.status(200).send("OK")
-
-})
-
-app.get("/getUsers", async (req, res) => {
+    res.send("User is : " + JSON.stringify(User));
 
 })
-
 
 app.listen(PORT, () => {
-    console.log(`Listening On Port ${PORT}`);
+    console.log(`Server Connected Successfully on ${PORT}`);
 })
