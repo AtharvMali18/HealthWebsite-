@@ -1,20 +1,15 @@
 const express = require('express');
 const app = express();
-const BodyParser = require('body-parser');
-const PORT = 4135;
+const PORT = 5500;
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const usermodel = require('./Models/UserModel');
+const bcrypt = require('bcrypt');
 
-app.use(BodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(express.json());
 
-const uri = "mongodb+srv://adityasuryawanshi1310:LK9RXBMOokQfAUDo@adicluster.e0f4mbs.mongodb.net/"
-
-mongoose.connect(uri).then(() => {
-    console.log("MongoDb Connected");
-}).catch((err) => {
-    console.log(err)
-})
 
 app.use(cors({
     origin: "http://localhost:5173",
@@ -23,30 +18,83 @@ app.use(cors({
     credentials: true
 }))
 
-app.get("/", (req, res) => {
-    res.send("<h1>Hello!!Atlassian</h1>")
-});
+mongoose.connect("mongodb://0.0.0.0:27017/HealthSiteusers", { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
+    console.log("Connected To MongoDBCompass");
+}).catch((err) => {
+    console.log(`${err} is Occured!!`);
+})
 
-app.post("/registerUser", async (req, res) => {
-    const Name = req.body.UserName;
-    const Password = req.body.UserPassword;
+app.get('/', (req, res) => {
+    res.send('Hello Welcome tot healthWebsite');
+})
+
+app.post('/handleusers', async (req, res) => {
+    const userName = req.body.Name;
+    const UserPassword = req.body.Passsword;
+    const userSurName = req.body.SurName;
     const Email = req.body.Email;
 
-    console.log(Name, Password, Email)
+    const User = {
+        Name: userName,
+        Surname: userSurName,
+        Passsword: UserPassword,
+        Email: Email
+    }
 
-    const user = await usermodel.create({ Name: Name,email:Email,password:Password});
+    async function hashPassword(plainPassword) {
+        try {
+            const salt = await bcrypt.genSalt(10);
+            const hash = await bcrypt.hash(plainPassword, salt);
+            return hash;
+        } catch (error) {
+            throw error;
+        }
+    }
 
-    console.log("New User Joined: " + user);
+    const HashedPassword = await hashPassword(UserPassword)
 
-    res.status(200).send("OK")
+    const NewUser = new usermodel({
+        FirstName: userName,
+        Surname: userSurName,
+        email: Email,
+        password: HashedPassword
+    })
+
+    NewUser.save().then(() => {
+        console.log("User Added To database")
+    }).catch((err) => {
+        console.log(`${err} is occured`);
+    })
+
+    res.send("User is : " + JSON.stringify(User));
 
 })
 
-app.get("/getUsers", async (req, res) => {
+
+app.post("/checkusers", async (req, res) => {
+    const UserRegisteredEmail = req.body.UserGivenEmail;
+    const UserRegisteredPassword = req.body.UserGivenPassword;
+
+    console.log(UserRegisteredEmail)
+    console.log(UserRegisteredPassword)
+    const user = await usermodel.findOne({ email: UserRegisteredEmail });
+    if (!user) {
+        console.log("You are Not Registered");
+    }
+    else {
+        const ComparedPassword = bcrypt.compare(UserRegisteredPassword, user.password)
+
+        if (ComparedPassword) {
+            console.log('You are Authenticated Person')
+        } else {
+            console.log('You are not Authenticated')
+        }
+    }
+
+     res.send(user.FirstName)
 
 })
-
 
 app.listen(PORT, () => {
-    console.log(`Listening On Port ${PORT}`);
+    console.log(`Server Connected Successfully on ${PORT}`);
 })

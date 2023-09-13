@@ -1,11 +1,11 @@
 #Faltudiv{
-    /* background-image: url('https://img.freepik.com/free-photo/vivid-blurred-colorful-background_58702-2620.jpg?size=626&ext=jpg'); */
+    background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWVzaCUyMGdyYWRpZW50fGVufDB8fDB8fHww&auto=format&fit=crop&w=600&q=60');
     background-repeat: no-repeat;
     background-size: cover;
 }
 
 #faltu2{
-    /* background-image: url('../Images/Back.png'); */
+    background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWVzaCUyMGdyYWRpZW50fGVufDB8fDB8fHww&auto=format&fit=crop&w=600&q=60');
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -47,5 +47,5 @@ button {
 } 
 
 button:hover {
-    background-color: #595ca0;
+    background-color: #45a049;
 }

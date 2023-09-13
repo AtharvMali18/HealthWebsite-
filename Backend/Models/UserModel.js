@@ -2,7 +2,10 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
-    Name: {
+    FirstName: {
+        type: String,
+    },
+    Surname: {
         type: String,
     },
     email: {
@@ -14,4 +17,4 @@ const userSchema = new mongoose.Schema({
 });
 
 
-module.exports = mongoose.model("webusers", userSchema);
+module.exports = mongoose.model("WebUsers", userSchema);
