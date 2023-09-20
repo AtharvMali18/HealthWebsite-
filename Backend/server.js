@@ -5,7 +5,9 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const usermodel = require('./Models/UserModel');
+const FileModel = require('./Models/FileModel');
 const bcrypt = require('bcrypt');
+const fs = require('fs');
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.json());
@@ -82,16 +84,40 @@ app.post("/checkusers", async (req, res) => {
         console.log("You are Not Registered");
     }
     else {
-        const ComparedPassword = bcrypt.compare(UserRegisteredPassword, user.password)
+        const ComparedPassword = await bcrypt.compare(UserRegisteredPassword, user.password)
+        console.log(ComparedPassword)
 
-        if (ComparedPassword) {
-            console.log('You are Authenticated Person')
+        if (ComparedPassword == true && user) {
+            res.send(user.FirstName);
         } else {
-            console.log('You are not Authenticated')
+            res.send("No User Registered")
         }
     }
+})
 
-     res.send(user.FirstName)
+app.post('/HandleFileUploaded', async (req, res) => {
+    const UserName = req.body.WhoSaved;
+    const fileName = req.body.FileName;
+    const FileUrl = req.body.FileURL;
+
+    const NewFile = new FileModel(({
+        Firstname: UserName,
+        fileName: fileName,
+        fileURL: FileUrl
+    }))
+
+    NewFile.save().then(() => {
+        console.log("File Added Successfully")
+        res.send(NewFile);
+    })
+
+})
+
+app.post('/getAllCertificates', async (req, res) => {
+    const UserNameCertificates = req.body.userName;
+
+    const Certificates = await FileModel.find({ Firstname: UserNameCertificates })
+    res.send(Certificates)
 
 })
 
