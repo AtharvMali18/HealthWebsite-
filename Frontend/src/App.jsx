@@ -14,7 +14,6 @@ function App() {
         <Route path="/signup" Component={Signup} />
         <Route path='/patient' Component={Patient} />
         <Route path="/Profile" Component={Profile} />
-        
       </Routes>
     </>
   )

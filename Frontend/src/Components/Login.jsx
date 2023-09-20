@@ -1,16 +1,17 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../Components/Login.css';
-import { useState } from 'react';
+import { useState,useContext} from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import fs from 'fs';
-
+import { UserContext } from './Context';
 
 const Login = () => {
 
     const [UserEmail, setUserEmail] = useState(" ")
     const [UserPassword, setUserPassword] = useState(" ")
-
+    const { setUser,AuthenticatePerson} = useContext(UserContext);
+    const Navigator=useNavigate();
 
     const disableBorder = () => {
 
@@ -20,7 +21,6 @@ const Login = () => {
         f4.style.boxShadow = "none";
         f3.style.background = "none";
         f4.style.background = "none";
-
     }
 
 
@@ -29,12 +29,18 @@ const Login = () => {
     }, [])
 
     const SendUserLogin = async (e) => {
-      e.preventDefault();
+        e.preventDefault();
         try {
 
             await axios.post("http://localhost:5500/checkusers", { UserGivenEmail: UserEmail, UserGivenPassword: UserPassword }, { withCredentials: true }).then((res) => {
-                alert("User Verified Successfully");
-                console.log(res.data);
+                if(res.data==="No User Registered"){
+                alert("You are not Verified!!")
+                Navigator('/')
+                }else{
+                    setUser(res.data);
+                   AuthenticatePerson();
+                   Navigator('/patient')
+                }
             }).catch((err) => {
                 alert(`${err} is occured`);
             })
@@ -43,9 +49,7 @@ const Login = () => {
             alert(`${err} is Occured`)
         }
 
-
     }
-
 
     return (
         <>
