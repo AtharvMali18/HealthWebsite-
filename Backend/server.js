@@ -99,11 +99,14 @@ app.post('/HandleFileUploaded', async (req, res) => {
     const UserName = req.body.WhoSaved;
     const fileName = req.body.FileName;
     const FileUrl = req.body.FileURL;
+    const PatientDetails=req.body.Patientdetails;
+
 
     const NewFile = new FileModel(({
         Firstname: UserName,
         fileName: fileName,
-        fileURL: FileUrl
+        fileURL: FileUrl,
+        patientDetails:PatientDetails
     }))
 
     NewFile.save().then(() => {
