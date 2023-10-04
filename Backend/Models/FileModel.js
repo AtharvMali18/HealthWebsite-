@@ -9,6 +9,9 @@ const userSchema = new mongoose.Schema({
    },
    fileURL: {
       type: String,
+   },
+   patientDetails: {
+      type: Object
    }
 });
 
