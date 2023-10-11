@@ -7,12 +7,26 @@
     border: 1px solid black;
     width: 800px;
     margin: auto;
-    margin-top: 70px;
+    /* margin-top: 70px; */
     padding: 20px;
-    background: url('your-background-image-url.jpg') no-repeat center center;
+    background-image: url('../Images/Virus.svg') no-repeat;
     background-size: cover;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  #faltu{
+    background-image:url('../Images/Virus.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  #newone{
+    background-image: url('../Images/Virus.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    margin: 0px;
   }
   
   h3 {
