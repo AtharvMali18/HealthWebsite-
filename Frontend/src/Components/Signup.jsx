@@ -1,105 +1,87 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from 'react-router-dom';
 import '../CSS/Signup.css';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
-
 
   const [UserFirstName, setUserFirstName] = useState("")
   const [UserEmail, setUserEmail] = useState("")
   const [UserPassword, setUserPassword] = useState("")
   const [UserLastName, setUserLastName] = useState("")
 
-
-  const HandleFormSubmit = async (e) => {
+  const RegisterUser = async (e) => {
     e.preventDefault();
 
     try {
+
       axios.post("http://localhost:5500/handleusers", { Name: UserFirstName, SurName: UserLastName, Passsword: UserPassword, Email: UserEmail }, { withCredentials: true }).then((res) => {
-        alert("Registered User Successfully");
+        toast.success('😊 Registration Successful', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
         console.log("User data is : " + JSON.stringify(res.data));
       }).catch((err) => {
-        alert(`err is occured ${err}`)
+        toast.error(`${err} ☠️ Error is Occured`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
       })
+
     } catch (err) {
-      alert(`${err} is Occured!!`)
+      alert(`${err} !! ERROR Occured !!`)
     }
 
   }
 
-  const disableBorderReact = () => {
-    const f1 = document.getElementById('f11');
-    const f2 = document.getElementById('f12');
-    const f3 = document.getElementById('f13');
-    const f4 = document.getElementById('f14');
-    const f5 = document.getElementById('f15')
-
-    f1.style.boxShadow = "none";
-    f2.style.boxShadow = "none";
-    f3.style.boxShadow = "none";
-    f4.style.boxShadow = "none";
-    f1.style.background = "none";
-    f2.style.background = "none";
-    f3.style.background = "none";
-    f4.style.background = "none";
-    f5.style.boxShadow = "none";
-    f5.style.background = "none";
-  }
-
-  useEffect(() => {
-    disableBorderReact();
-  }, []);
-
-
-
   return (
     <>
-      <div id="newone">
-        <div id="faltu2" className="signup-container">
-          <h3>Signup</h3>
-          <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", padding: "10px 20px ", width: "400px" }}>
+      <div className="Div-c1">
+        <form className="form1">
+          <span id="login-lable1">Signup</span>
 
-            <label htmlFor="fname" id="f11">First Name</label>
-            <input type="text" id="name" onChange={(e) => { setUserFirstName(e.target.value) }} value={UserFirstName} /><br />
-          </div>
+          <input className="input1" type="text" placeholder="FirstName" onChange={(e) => { setUserFirstName(e.target.value) }} value={UserFirstName} required />
 
+          <input className="input1" type="text" placeholder="LastName" onChange={(e) => { setUserLastName(e.target.value) }} value={UserLastName} required />
 
-          <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", padding: "2px 10px ", width: "400px" }}>
-            <label htmlFor="lname" id="f12">Last Name</label>
-            <input type="text" id="name" required onChange={(e) => { setUserLastName(e.target.value) }} value={UserLastName} />
-          </div>
+          <input className="input1" type="email" placeholder="Email" onChange={(e) => {
+            setUserEmail(e.target.value)
+          }} value={UserEmail} required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" />
 
-          <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", padding: "10px 20px ", width: "400px" }}>
-            <label htmlFor="email" id='f13' >Email</label>
-            <input type="email" id="email" required onChange={(e) => { setUserEmail(e.target.value) }} />
-          </div>
+          <input className="input1" type="password" placeholder="PassWord" onChange={(e) => { setUserPassword(e.target.value) }} value={UserPassword} required />
 
-          <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", padding: "10px 20px ", width: "400px" }}>
-            <label htmlFor="Adress" id='f14'>Password</label>
-            <input type="password" id="major" required onChange={(e) => { setUserPassword(e.target.value) }} value={UserPassword} />
-          </div>
+          <button id="btn1" onClick={RegisterUser}>Submit</button>
 
-          <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", padding: "10px 20px ", width: "400px" }}>
-            <label htmlFor="Adress" id='f15'> Confirm Password</label>
-            <input type="password" id="major" required />
-          </div>
+          <Link to="/login" style={{ textDecoration: "none" }}><p style={{ color: "whitesmoke", marginTop: "20px", fontWeight: "bold", fontSize: '20px' }}>Already Had Account??</p></Link>
 
-          <button onClick={HandleFormSubmit}>Register</button>
-
-
-          <div className="button-container">
-
-            <Link to="/login" className="login-link" style={{ fontWeight: "bold" }}>
-              Login
-            </Link>
-
-          </div>
-          {/* </form> */}
-        </div>
+        </form>
+        <ToastContainer
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
       </div>
-
-
 
     </>
   );

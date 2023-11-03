@@ -1,82 +1,112 @@
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import '../Components/Login.css';
-import { useState,useContext} from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import '../CSS/Login.css';
+import { useState, useContext } from 'react';
 import axios from 'axios';
 import { UserContext } from './Context';
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
 
-    const [UserEmail, setUserEmail] = useState(" ")
-    const [UserPassword, setUserPassword] = useState(" ")
-    const { setUser,AuthenticatePerson} = useContext(UserContext);
-    const Navigator=useNavigate();
+    const [UserEmail, setUserEmail] = useState("")
+    const [UserPassword, setUserPassword] = useState("")
+    const { setUser, AuthenticatePerson } = useContext(UserContext);
+    const Navigator = useNavigate();
 
-    const disableBorder = () => {
-
-        const f3 = document.getElementById('f3')
-        const f4 = document.getElementById('f4')
-        f3.style.boxShadow = "none";
-        f4.style.boxShadow = "none";
-        f3.style.background = "none";
-        f4.style.background = "none";
-    }
-
-
-    useEffect(() => {
-        disableBorder();
-    }, [])
-
-    const SendUserLogin = async (e) => {
+    const LoginUser = async (e) => {
         e.preventDefault();
+
         try {
 
-            await axios.post("http://localhost:5500/checkusers", { UserGivenEmail: UserEmail, UserGivenPassword: UserPassword }, { withCredentials: true }).then((res) => {
-                if(res.data==="No User Registered"){
-                alert("You are not Verified!!")
-                Navigator('/')
-                }else{
+            axios.post("http://localhost:5500/checkusers", { UserGivenEmail: UserEmail, UserGivenPassword: UserPassword }, { withCredentials: true }).then((res) => {
+                if (res.data === "No User Registered") {
+                    toast.error(`☠️ No User Registered `, {
+                        position: "top-center",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                    });
+                } else {
                     setUser(res.data);
-                   AuthenticatePerson();
-                   Navigator('/patient')
+                    AuthenticatePerson();
+                    toast.success('😊 Login Successful', {
+                        position: "top-center",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                    });
+                    setTimeout(() => {
+                        Navigator('/patient');
+                    }, 6000)
                 }
             }).catch((err) => {
-                alert(`${err} is occured`);
+                toast.error(`${err} ☠️ Error is Occured`, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
             })
 
         } catch (err) {
-            alert(`${err} is Occured`)
+            toast.error(`${err} ☠️ Error is Occured`, {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
         }
 
     }
 
+
     return (
         <>
+            <div className="Div-clog">
+                <form className="formlog">
+                    <span id="login-lablelog">Login</span>
 
-            <div id='Faltudiv' style={{ display: "block", margin: "auto", border: "1px solid black", width: "300px", marginTop: "70px" }}>
+                    <input className="inputlog" type="email" placeholder="Email" onChange={(e) => {
+                        setUserEmail(e.target.value);
+                    }} value={UserEmail} />
 
-                <h3>Login</h3>
+                    <input className="inputlog" type="password" placeholder="PassWord" onChange={(e) => { setUserPassword(e.target.value) }} value={UserPassword} />
 
-                <br />
+                    <button id="btnlog" onClick={LoginUser}>Submit</button>
 
-                <form >
-
-                    <label htmlFor="email" id='f3'>Email</label>
-                    <input type="email" id="email" name="email" required onChange={(e) => { setUserEmail(e.target.value) }} value={UserEmail} />
-
-                    <label htmlFor="major" id='f4'>Password</label>
-                    <input type="password" id="major" name="major" required onChange={(e) => { setUserPassword(e.target.value) }} />
-
-                    <div style={{ display: "block", margin: "auto", width: "fit-content", textAlign: "center", textDecoration: "none" }}>
-
-                        <button onClick={SendUserLogin}>Login</button>
-                        <Link to="/signup" style={{ textDecoration: "none", color: "black", listStyle: "none" }}><h4>Register</h4></Link>
-
-                    </div>
+                    <Link to="/signup" style={{ listStyle: "none", textDecoration: "none" }}><p style={{ color: "whitesmoke", fontWeight: "bolder", fontSize: '20px' }}>Dont Have Account??</p></Link>
 
                 </form>
+                <ToastContainer
+                    position="top-center"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="dark"
+                />
             </div>
+
         </>
     )
 }

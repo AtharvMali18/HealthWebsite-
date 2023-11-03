@@ -1,11 +1,6 @@
 /* Import Font Dancing Script */
 @import url(https://fonts.googleapis.com/css?family=Dancing+Script);
 
-* {
-    margin: 0;
-}
-
-
 /* NavbarTop */
 .navbar-top {
     background-color: #fff;
@@ -13,13 +8,13 @@
     box-shadow: 0px 4px 8px 0px grey;
     height: 70px;
 }
-/* 
+
 .title {
     font-family: 'Dancing Script', cursive;
     padding-top: 15px;
     position: absolute;
     left: 45%;
-} */
+}
 
 .navbar-top ul {
     float: right;
@@ -70,6 +65,7 @@
     margin-bottom: 20px;
     margin-top: -12px;
     text-align: center;
+
 }
 
 .profile img {
@@ -124,6 +120,7 @@
     font-size: 28px;
     padding: 0 10px;
     width: 58%;
+    text-align: center;
 }
 
 .main h2 {
@@ -131,7 +128,6 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 24px;
     margin-bottom: 10px;
-    margin-left: 80px;
 }
 
 .main .card {
@@ -141,6 +137,9 @@
     height: auto;
     margin-bottom: 20px;
     padding: 20px 0 20px 50px;
+    margin-left: 60px;
+ display: block;
+ margin: auto;
 }
 
 .main .card table {
