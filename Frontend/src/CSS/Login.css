@@ -1,0 +1,110 @@
+.formlog{
+    height: 20em;
+    width: 16em;
+    padding: 4%;
+    border-radius: 16px;
+    background: black;
+    box-shadow: 12px 12px 18px #bababa,
+        -12px -12px 18px #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: space-evenly;
+}
+
+#login-lablelog{
+    height: 15%;
+    text-align: center;
+    font-size: 34px;
+    letter-spacing: 3px;
+    color: whitesmoke;
+    font-weight: 600;
+    text-shadow: -2px -2px 3px #ffffff,
+        2px 2px 3px #bababa;
+    position: relative;
+    top: -14px;
+}
+
+.inputlog{
+    height: 16%;
+    padding: 1px 8px;
+    border: none;
+    font-size: 1em;
+    letter-spacing: 2px;
+    border-radius: 8px;
+    background: #f3f3f3;
+    box-shadow: inset -2px -2px 4px #ffffff,
+        inset 2px 2px 4px rgba(0, 0, 0, 0.356);
+    text-decoration: none;
+    background: linear-gradient(to right, white, #80808010, white);
+    background-size: 200% 200%;
+    animation: input 4s infinite;
+}
+
+.inputlog:focus-visible {
+    outline: none;
+    background: rgb(241, 241, 241);
+}
+
+#btnlog{
+    font-size: x-large;
+    letter-spacing: 3px;
+    color: white;
+    font-weight: 700;
+    height: 18%;
+    background: linear-gradient(144deg, #af40ff,
+            #5b42f3 50%, #00ddeb);
+    border-radius: 8px;
+    border: none;
+    box-shadow: inset 1px 3px 3px #ffffffbd,
+        inset -4px -4px 3px #00000046;
+    background-size: 150% 150%;
+    animation: input 5s infinite;
+    transition: all 900ms ease-in;
+}
+
+#btnlog:hover {
+    position: relative;
+    bottom: 3px;
+    background: linear-gradient(144deg, #9706ff,
+            #2f0fff 50%, #18f0ff);
+}
+
+@keyframes input {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.Div-clog{
+    display: grid;
+    place-items: center;
+    height: 100vh;
+    width: 100%;
+    --s: 150px;
+    /* control the size */
+    --c1: #ff847c;
+    --c2: #e84a5f;
+    --c3: #fecea8;
+    --c4: #99b898;
+
+    background: conic-gradient(from 45deg at 75% 75%,
+            var(--c3) 90deg,
+            var(--c1) 0 180deg,
+            #0000 0),
+        conic-gradient(from -45deg at 25% 25%, var(--c3) 90deg, #0000 0),
+        conic-gradient(from -45deg at 50% 100%, #0000 180deg, var(--c3) 0),
+        conic-gradient(from -45deg,
+            var(--c1) 90deg,
+            var(--c2) 0 225deg,
+            var(--c4) 0);
+    background-size: var(--s) var(--s);
+}

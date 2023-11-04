@@ -1,178 +1,164 @@
-import '../Components/InfowithImage.css';
-import { useContext, useState } from 'react';
+import '../CSS/InfoWithImage.css'
 import { UserContext } from './Context';
-import axios from 'axios';
+import { useContext, useState } from 'react';
+import Update from './Update';
 import { SmashUploader } from "@smash-sdk/uploader";
-import GoToTop from '../Components/GoToTop';
-import generatePDF from 'react-to-pdf';
-import { useRef } from 'react';
+import axios from 'axios';
 
 
 const InfoWithImage = () => {
-    const { userName, Authenticated } = useContext(UserContext);
-    const [UploadedFile, setUploadedFile] = useState(null);
-    const [PDFUAge, setPDFUAge] = useState(0);
-    const [PDFUBlood, setPDFUBlood] = useState("");
-    const [PDFUHeight, setPDFUHeight] = useState(0);
-    const [PDFUWeight, setPDFUWeight] = useState(0);
-    const [PDFUBMI, setPDFUBMI] = useState(0);
-    const [PDFUhistory, setPDFUhistory] = useState("");
-    const [ClickedForState, setClickedForState] = useState(false)
-    const [GetAllFiles, setGetAllFiles] = useState(null);
 
-    const target = useRef();
+    const [Age, setAge] = useState(0);
+    const [BloodGroup, setBloodGroup] = useState("");
+    const [Height, setHeight] = useState(0);
+    const [Weight, setWeight] = useState(0);
+    const [Image, setImage] = useState("");
+    const [BMI, setBMI] = useState(0);
+    const [UploadedFile, setUploadedFile] = useState(null);
+    const [Certificates, setCertificates] = useState([]);
+
+    const { userName } = useContext(UserContext);
 
     const HandleFileChange = (e) => {
-        setUploadedFile(e.target.files[0])
+        setUploadedFile(e.target.files[0]);
     }
 
-    const PrintPDf = async () => {
-        await generatePDF(target, { filename: 'MediMERN.pdf' });
-    }
-
-    const ShowPreview = () => {
-        const previewdiv = document.getElementById('PDFDIV');
-        previewdiv.style.display = "block";
-        setClickedForState(true);
-    }
-
-    const UploadFileToBackend = async () => {
-
-        if (Authenticated == true && ClickedForState) {
-            PrintPDf();
-
-            const su = new SmashUploader({ region: "eu-central-1", token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjBjYWY2LTM2NzctNGMwZS04OWQ4LWRiYjBkZDhiNmUyMC1kdSIsInVzZXJuYW1lIjoiNjBhOTQyMTYtZDQ5ZS00NTg3LWEzZGMtM2I4MTJkMjc4ZjA3IiwicmVnaW9uIjoiZXUtY2VudHJhbC0xIiwiaXAiOiIxMDMuMTg3LjgxLjkzIiwic2NvcGUiOiJOb25lIiwiYWNjb3VudCI6IjY5OGU4ZTI0LTE0Y2MtNDFjMC05YmEwLTg3NDI0OGQ5NjdmMC1kYSIsImlhdCI6MTY5NjQxNzcwNSwiZXhwIjo0ODUyMTc3NzA1fQ.J9497kCo-RFOnyJsLCc3HGw9lS3umAbAw_vM_-u6hkY" });
-
-            const files = [UploadedFile];
-            console.log(UploadedFile)
-
-            su.upload({
-                files,
-                title: UploadedFile.name,
-                description: 'Uploaded file',
-                preview: 'Full'
-            }).then(transfer => {
-                const PatientDetails = {
-                    name: userName,
-                    age: PDFUAge,
-                    Bloodgroup: PDFUBlood,
-                    Height: PDFUHeight,
-                    Weight: PDFUWeight,
-                    BMI: PDFUBMI,
-                    Patienthist: PDFUhistory
-                }
-                axios.post("http://localhost:5500/HandleFileUploaded", { FileName: UploadedFile.name, FileURL: transfer.transfer.transferUrl, WhoSaved: userName, Patientdetails: PatientDetails }).then((res) => {
-                    console.log(res.data);
-                    alert("Uploaded Successfully");
-                }).catch((err) => {
-                    console.log("Error Occured While Storing!!" + err);
-                })
-
-            }).catch(error => {
-                console.log(error);
-            });
-
-        } else {
-            alert("You Are not Authenticated Person!! or Hit Preview First");
-        }
-
-    }
-
-    const getAllCertificates = async () => {
-        axios.post("http://localhost:5500/getAllCertificates", { userName: userName }).then((res) => {
-            setGetAllFiles(res.data);
+    setInterval(() => {
+        axios.post("http://localhost:5500/getAllCertificates", { userName: userName }, { withCredentials: true }).then((res) => {
+            setCertificates(res.data);
         }).catch((err) => {
-            console.log(`${err} is Occured`);
+            console.log(`${err} is Occuerd`)
         })
+    }, 2000);
+
+    setInterval(() => {
+        axios.post("http://localhost:5500/getProfile", { Name: userName }, { withCredentials: true }).then((res) => {
+            setAge(res.data.Agep);
+            setBloodGroup(res.data.Bloodp);
+            setHeight(res.data.Heightp);
+            setWeight(res.data.Weightp);
+            setBMI(res.data.BMIP);
+            setImage(res.data.ImageP);
+        }).catch((err) => {
+            console.log(`${err} Fetching data Occured!!`);
+        })
+    }, 10000);
+
+
+    const UploadToBackend = async (e) => {
+        e.preventDefault();
+
+        const su = new SmashUploader({ region: "eu-central-1", token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFkNzViNzdjLTYyN2QtNDU0ZC04MWRlLTRmMmNmMmRiYWMyMS1kdSIsInVzZXJuYW1lIjoiZjNhNjc4N2ItODlhYi00YWQ5LTkwYTYtYjY5ZTkxYTJmMmJhIiwicmVnaW9uIjoiZXUtY2VudHJhbC0xIiwiaXAiOiI0OS4zNi4zMy4xNjYiLCJzY29wZSI6Ik5vbmUiLCJhY2NvdW50IjoiNGFkZmVhZjQtOGRlMS00NTQ3LTkwYWEtZjM1MzUwYTQyOWU0LWRhIiwiaWF0IjoxNjk4OTM0OTEwLCJleHAiOjQ4NTQ2OTQ5MTB9.b2ncKAH-tkQ4YtO08FwivrB1h0vFYLY9u68f9ES7Shc" });
+
+        console.log(su);
+
+        const files = [UploadedFile];
+
+        su.upload({
+            files,
+            title: UploadedFile.name,
+            description: 'Uploaded file',
+            preview: 'Full'
+        }).then(transfer => {
+            axios.post("http://localhost:5500/HandleFileUploaded", { WhoSaved: userName, FileName: UploadedFile.name, FileURL: transfer.transfer.transferUrl }, { withCredentials: true }).then((res) => {
+                console.log("File Uploaded Successfully" + res.data);
+            }).catch((err) => {
+                alert(`${err} is Occured`);
+                console.log(err);
+            })
+        }).catch((err) => {
+            alert(`${err} is Occured`);
+            console.log(err);
+        })
+
     }
-    getAllCertificates();
+
 
     return (
-
         <>
-            <div className="info-container">
-                <div className="info">
-                    <h2 className='med'>Medical Information </h2><br />
-                    <div>
-                        <li>Patient Name:{userName}</li>
-                    </div>
+            <div className="navbar-top">
+                <div className="title">
+                    <h1>Profile</h1>
                 </div>
+            </div>
 
-                <div className="up" style={{ width: "fit-content", marginLeft: "100px" }}>
-                    <h2>Fill Medical Details:</h2>
-                    <h5>Enter age</h5>
-                    <input type='number' style={{ width: "fit-content" }} onChange={(e) => { setPDFUAge(e.target.value) }} placeholder='Age' />
-                    <br />
-                    <h5>Enter BloodGroup</h5>
-                    <input type='Text' style={{ width: "fit-content" }} onChange={(e) => { setPDFUBlood(e.target.value) }} placeholder='BloodGroup' />
-                    <br />
-                    <h5>Enter Height</h5>
-                    <input type='number' style={{ width: "fit-content" }} onChange={(e) => { setPDFUHeight(e.target.value) }} placeholder='Height' />
-                    <br />
-                    <h5>Enter Weight</h5>
-                    <input type='number' style={{ width: "fit-content" }} onChange={(e) => { setPDFUWeight(e.target.value) }} placeholder='Weight' />
-                    <br />
-                    <h5>Enter BMI</h5>
-                    <input type='number' style={{ width: "fit-content" }} onChange={(e) => { setPDFUBMI(e.target.value) }} placeholder='BMI' />
-                    <br />
-                    <h5>Enter Disease</h5>
-                    <input type='text' style={{ width: "fit-content" }} onChange={(e) => { setPDFUhistory(e.target.value) }} placeholder='Disease' />
-                    <h5>Upload Certificates</h5>
-                    <input type="file" style={{ width: "fit-content" }} onChange={HandleFileChange} />
-                    <br />
-                    <button className="up1" onClick={UploadFileToBackend}>Upload</button>
-                    <br />
-                    <br />
-                    <button className="up1" onClick={ShowPreview}>Preview</button>
+            <div className="sidenav">
+                <div className="profile">
+                    <img src={Image} alt="" width="100" height="100" />
 
-                    {/*Div for Creating PDF on Client Side Application*/}
-                    <div ref={target} id='PDFDIV' >
-                        <div className="pdf-container">
-                            <div className="pdf-header">
-                                <h1>HOLA!!{userName}</h1>
-                            </div>
-                            <div className="pdf-content">
-                                <div className="pdf-section">
-                                    <p>Name:{userName}</p>
-                                    <p>Age:{PDFUAge}</p>
-                                    <p>BloodGroup:{PDFUBlood}</p>
-                                </div>
-                                <div className="pdf-section">
-                                    <p>Height:{PDFUHeight}</p>
-                                    <p>Weight:{PDFUWeight}</p>
-                                    <p>BMI:{PDFUBMI}</p>
-                                </div>
-                            </div>
-                        </div>
+                    <div className="name">
+                        {userName}
                     </div>
                 </div>
 
             </div>
 
-            <div style={{ width: "fit-content", display: "block", margin: "auto" }}>
-                <br />
-                <br />
-                <h1>Your All Certificates</h1>
-                <hr />
-                <br />
-                <br />
-                <div id='zanduBaam'>{GetAllFiles && GetAllFiles.map((val) => {
+
+            <div className="main">
+                <h2>IDENTITY</h2>
+                <div className="card">
+                    <div className="card-body">
+                        <i className="fa fa-pen fa-xs edit"></i>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>:</td>
+                                    <td>{userName}</td>
+                                </tr>
+                                <tr>
+                                    <td>Age</td>
+                                    <td>:</td>
+                                    <td>{Age}</td>
+                                </tr>
+                                <tr>
+                                    <td>Height</td>
+                                    <td>:</td>
+                                    <td>{Height}</td>
+                                </tr>
+                                <tr>
+                                    <td>BloodGroup</td>
+                                    <td>:</td>
+                                    <td>{BloodGroup}</td>
+                                </tr>
+                                <tr>
+                                    <td>Weight
+                                    </td>
+                                    <td>:</td>
+                                    <td>{Weight}</td>
+                                </tr>
+                                <tr>
+                                    <td>BMI</td>
+                                    <td>:</td>
+                                    <td>{BMI}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <h1 style={{ marginTop: "40px" }}>Certifictes</h1>
+                {Certificates ? <>{Certificates.map((val) => {
                     return (<>
 
-                        <div className='cardop'>
-                            <div className="card-infoop">
-                                <h3>{val.Firstname}</h3>
-                                <h6>{val.fileName}</h6>
-                                <a href={val.fileURL} style={{ textDecoration: "none" }}><p>FileURL</p></a>
-                            </div>
-                        </div>
+                        <p>Name of Certifcate :{val.fileName}</p>
+                        <p>Url of Certifcate :{val.fileURL}</p>
+
                     </>)
-                })}</div>
+                })}</> : <>NO Certificates Uptill Now</>}
+
+
+                <input type="file" style={{ width: "fit-content" }} onChange={HandleFileChange} />
+
+                <button onClick={UploadToBackend}>Upload Certificates</button>
+
+
             </div>
-            <GoToTop />
+
+            <Update />
 
         </>
-    );
-};
+    )
+}
 
-export default InfoWithImage;
+export default InfoWithImage

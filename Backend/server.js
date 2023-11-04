@@ -6,12 +6,11 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const usermodel = require('./Models/UserModel');
 const FileModel = require('./Models/FileModel');
+const DetailsModel = require('./Models/Details');
 const bcrypt = require('bcrypt');
-const fs = require('fs');
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.json());
-
 
 app.use(cors({
     origin: "http://localhost:5173",
@@ -77,11 +76,9 @@ app.post("/checkusers", async (req, res) => {
     const UserRegisteredEmail = req.body.UserGivenEmail;
     const UserRegisteredPassword = req.body.UserGivenPassword;
 
-    console.log(UserRegisteredEmail)
-    console.log(UserRegisteredPassword)
     const user = await usermodel.findOne({ email: UserRegisteredEmail });
     if (!user) {
-        console.log("You are Not Registered");
+        res.send("No User Registered");
     }
     else {
         const ComparedPassword = await bcrypt.compare(UserRegisteredPassword, user.password)
@@ -99,14 +96,13 @@ app.post('/HandleFileUploaded', async (req, res) => {
     const UserName = req.body.WhoSaved;
     const fileName = req.body.FileName;
     const FileUrl = req.body.FileURL;
-    const PatientDetails=req.body.Patientdetails;
 
+   console.log(fileName, FileUrl)
 
     const NewFile = new FileModel(({
         Firstname: UserName,
         fileName: fileName,
         fileURL: FileUrl,
-        patientDetails:PatientDetails
     }))
 
     NewFile.save().then(() => {
@@ -120,9 +116,41 @@ app.post('/getAllCertificates', async (req, res) => {
     const UserNameCertificates = req.body.userName;
 
     const Certificates = await FileModel.find({ Firstname: UserNameCertificates })
-    res.send(Certificates)
+    res.send(Certificates);
 
 })
+
+
+app.post('/setprofile', async (req, res) => {
+    const FirstNameofuser = req.body.PatientDetailsU.Name;
+    const PatientDetails = req.body.PatientDetailsU;
+
+    const profile = new DetailsModel(({
+        Firstname: FirstNameofuser,
+        patientDetails: PatientDetails
+    }))
+
+    profile.save().then(() => {
+        res.send(`Profile Done For : ${FirstNameofuser} `);
+    })
+
+})
+
+app.post('/getProfile', async (req, res) => {
+
+    const FirstNameofuser = req.body.Name;
+
+    const user = await DetailsModel.findOne({ Firstname: FirstNameofuser });
+
+    if (user) {
+        res.send(user.patientDetails);
+    } else {
+        res.send("Fill Profile");
+    }
+
+})
+
+
 
 app.listen(PORT, () => {
     console.log(`Server Connected Successfully on ${PORT}`);
