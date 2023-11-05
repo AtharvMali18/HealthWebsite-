@@ -1,11 +1,12 @@
 import '../CSS/Footer.css'; 
+import medimern from'../Images/MediMERN.png'
 
 const Footer = () => {
     return (
         <footer className="footer">
             <div className="footer-content">
                 <div className="footer-left">
-                    <img src={"https://img.freepik.com/free-vector/red-logo-black-background_1195-52.jpg?w=740&t=st=1692231919~exp=1692232519~hmac=7c252187bb258b91eb6da250a69c7df2e10140e08252939e9617866a45dfea3d"} alt="Company Logo" className="company-logo" />
+                    <img src={medimern} alt="Company Logo" className="company-logo" />
                 </div>
                 <div className="footer-right">
                     <div className="contact-info">

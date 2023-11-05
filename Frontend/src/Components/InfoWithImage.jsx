@@ -70,92 +70,85 @@ const InfoWithImage = () => {
             alert(`${err} is Occured`);
             console.log(err);
         })
-
     }
-
 
     return (
         <>
             <div className="navbar-top">
-                <div className="title">
+                <div className="title" >
                     <h1>Profile</h1>
                 </div>
             </div>
 
-            <div className="sidenav">
-                <div className="profile">
-                    <img src={Image} alt="" width="100" height="100" />
+            <div className="main-container">
+                <div className="top-container">
+                    <div className="profile">
+                        <img src={Image} />
+                        <div className="name">
+                            {userName}
+                        </div>
+                    </div>
 
-                    <div className="name">
-                        {userName}
+                    <div className="main">
+                        <h2>IDENTITY</h2>
+                        <div className="card">
+                            <div className="card-body">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td>Name</td>
+                                            <td>:</td>
+                                            <td>{userName}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Age</td>
+                                            <td>:</td>
+                                            <td>{Age}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Height</td>
+                                            <td>:</td>
+                                            <td>{Height}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>BloodGroup</td>
+                                            <td>:</td>
+                                            <td>{BloodGroup}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Weight
+                                            </td>
+                                            <td>:</td>
+                                            <td>{Weight}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>BMI</td>
+                                            <td>:</td>
+                                            <td>{BMI}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-            </div>
+                <div className="certificate">
+                    <h1 style={{marginLeft: "100px"}}>Certifictes</h1>
+                    {Certificates ? <>{Certificates.map((val) => {
+                        return (<>
+                            <p>Name of Certifcate :{val.fileName}</p>
+                            <p>Url of Certifcate :{val.fileURL}</p>
+                        </>)
+                    })}</> : <>NO Certificates Uptill Now</>}
 
-
-            <div className="main">
-                <h2>IDENTITY</h2>
-                <div className="card">
-                    <div className="card-body">
-                        <i className="fa fa-pen fa-xs edit"></i>
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>:</td>
-                                    <td>{userName}</td>
-                                </tr>
-                                <tr>
-                                    <td>Age</td>
-                                    <td>:</td>
-                                    <td>{Age}</td>
-                                </tr>
-                                <tr>
-                                    <td>Height</td>
-                                    <td>:</td>
-                                    <td>{Height}</td>
-                                </tr>
-                                <tr>
-                                    <td>BloodGroup</td>
-                                    <td>:</td>
-                                    <td>{BloodGroup}</td>
-                                </tr>
-                                <tr>
-                                    <td>Weight
-                                    </td>
-                                    <td>:</td>
-                                    <td>{Weight}</td>
-                                </tr>
-                                <tr>
-                                    <td>BMI</td>
-                                    <td>:</td>
-                                    <td>{BMI}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <input type="file" style={{ width: "fit-content" }} onChange={HandleFileChange} />
+                    <button onClick={UploadToBackend}>Upload Certificates</button>
                 </div>
-
-                <h1 style={{ marginTop: "40px" }}>Certifictes</h1>
-                {Certificates ? <>{Certificates.map((val) => {
-                    return (<>
-
-                        <p>Name of Certifcate :{val.fileName}</p>
-                        <p>Url of Certifcate :{val.fileURL}</p>
-
-                    </>)
-                })}</> : <>NO Certificates Uptill Now</>}
-
-
-                <input type="file" style={{ width: "fit-content" }} onChange={HandleFileChange} />
-
-                <button onClick={UploadToBackend}>Upload Certificates</button>
-
-
+                <div className="upda">
+                    <Update/>
+                </div>
             </div>
-
-            <Update />
 
         </>
     )
