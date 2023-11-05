@@ -1,12 +1,28 @@
 /* Import Font Dancing Script */
 @import url(https://fonts.googleapis.com/css?family=Dancing+Script);
 
+.main-container{
+    display: flex;
+    flex-direction: column;
+}
+.top-container{
+    display: flex;
+    flex-direction: row;
+    width: 60%;
+    margin: auto;
+    margin-top: 60px;
+}
+
 /* NavbarTop */
+
 .navbar-top {
     background-color: #fff;
     color: #333;
     box-shadow: 0px 4px 8px 0px grey;
     height: 70px;
+}
+.upda{
+    margin-right: 80px;
 }
 
 .title {
@@ -45,9 +61,6 @@
     position: relative;
 }
 
-/* End */
-
-/* Sidenav */
 .sidenav {
     background-color: #fff;
     color: #333;
@@ -62,10 +75,12 @@
 }
 
 .profile {
-    margin-bottom: 20px;
-    margin-top: -12px;
-    text-align: center;
+    /* margin-bottom: 20px;
+    margin-top: -12px; */
 
+    text-align: center;
+    width: 30%;
+    border: 2px solid black;
 }
 
 .profile img {
@@ -111,16 +126,22 @@
     width: 65%;
 }
 
+.certificate{
+    width: 30%;
+    margin: auto;
+    padding: 4px;
+    margin-top: 100px;
+}
+
 /* End */
 
 /* Main */
+
 .main {
-    margin-top: 2%;
-    margin-left: 29%;
     font-size: 28px;
     padding: 0 10px;
-    width: 58%;
     text-align: center;
+    margin-left: 200px;
 }
 
 .main h2 {
@@ -138,15 +159,17 @@
     margin-bottom: 20px;
     padding: 20px 0 20px 50px;
     margin-left: 60px;
- display: block;
- margin: auto;
+    display: block;
+    margin: auto;
+    width: 300px;
 }
 
 .main .card table {
     border: none;
     font-size: 16px;
     height: 270px;
-    width: 80%;
+    width: 100%;
+    /* border: 2px solid salmon; */
 }
 
 .edit {

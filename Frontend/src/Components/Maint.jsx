@@ -11,7 +11,6 @@ const Maint = () => {
             < MainSection />
             <br />
             <br />
-            {/* <br /> */}
             <HeroSection />
             <Cards />
             <Footer />

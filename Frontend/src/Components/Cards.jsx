@@ -1,19 +1,20 @@
 import '../CSS/Cards.css';
-import {useNavigate} from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
+import Explore from './Explore';
 
 const Cards = () => {
 
- const navigator=useNavigate();
+    const navigator = useNavigate();
 
-    const navregi=()=>{
-    navigator("/signup")
+    const navregi = () => {
+        navigator("/signup")
     }
-
+    
     return (
         <section className="card-section">
 
             <h2 className="heading-style-h1">Explore Features</h2>
+            <Explore/>
 
             <div className="card" onClick={navregi}>
                 <div className="icon">

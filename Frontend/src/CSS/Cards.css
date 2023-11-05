@@ -49,6 +49,11 @@
   letter-spacing: 4px;
 }
 
+.textcard{
+  color: wheat;
+  padding-top: 4px;
+}
+
 .card .text {
   width: 80%;
   margin: 0 auto;
